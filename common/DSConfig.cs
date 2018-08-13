@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Configuration;
 
 namespace eg_01_csharp_jwt
@@ -13,7 +13,7 @@ namespace eg_01_csharp_jwt
         private const string CC_1_EMAIL = "DS_CC_1_EMAIL";
         private const string CC_1_NAME = "DS_CC_1_NAME";
         private const string PRIVATE_KEY_FILE = "DS_PRIVATE_KEY_FILE";
-        private const string PRIVATE_KEY = "DS_RPIVATE_KEY";
+        private const string PRIVATE_KEY = "DS_PRIVATE_KEY";
 
         static DSConfig()
         {
