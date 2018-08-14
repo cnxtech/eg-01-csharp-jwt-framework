@@ -36,6 +36,7 @@ namespace eg_01_csharp_jwt
             if (AccessToken == null 
                 || (DateTime.Now.Millisecond + TOKEN_REPLACEMENT_IN_MILLISECONDS) > expiresIn)
             {
+                Console.WriteLine("Obtaining a new access token");
                 UpdateToken();
             }
         }
