@@ -46,7 +46,7 @@ namespace eg_01_csharp_jwt
 
             OAuth.OAuthToken authToken = ApiClient.ConfigureJwtAuthorizationFlowByKey(DSConfig.ClientID,
                             DSConfig.ImpersonatedUserGuid,
-                            DSConfig.AUD,
+                            DSConfig.AuthServer,
                             DSConfig.PrivateKey,
                             1);
 

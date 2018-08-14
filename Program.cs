@@ -9,27 +9,57 @@ namespace eg_01_csharp_jwt
     {
         static void Main(string[] args)
         {
-            var apiClient = new ApiClient();
-
-            EnvelopeSummary result = new SendEnvelope(apiClient).Send();
-            Console.WriteLine("Envelope status: {0}. Envelope ID: {1}", result.Status, result.EnvelopeId);
-
-            Console.WriteLine("\nList envelopes in the account...");
-            EnvelopesInformation envelopesList = new ListEnvelopes(apiClient).List();
-
-            List<Envelope> envelopes = envelopesList.Envelopes;
-
-            if (envelopesList != null && envelopes.Count > 2)
+            try
             {
-                //Console.WriteLine("Results for {0} envelopes were returned. Showing the first two: ", envelopes.Count);
-                envelopesList.Envelopes = new List<Envelope>()
-                {
-                    envelopes[0],
-                    envelopes[1]
-                };
-            }
+                var apiClient = new ApiClient();
 
-            DSHelper.PrintPrettyJSON(envelopesList);
+                EnvelopeSummary result = new SendEnvelope(apiClient).Send();
+                Console.WriteLine("Envelope status: {0}. Envelope ID: {1}", result.Status, result.EnvelopeId);
+
+                Console.WriteLine("\nList envelopes in the account...");
+                EnvelopesInformation envelopesList = new ListEnvelopes(apiClient).List();
+
+                List<Envelope> envelopes = envelopesList.Envelopes;
+
+                if (envelopesList != null && envelopes.Count > 2)
+                {
+                    //Console.WriteLine("Results for {0} envelopes were returned. Showing the first two: ", envelopes.Count);
+                    envelopesList.Envelopes = new List<Envelope>() {
+                        envelopes[0],
+                        envelopes[1]
+                    };
+                }
+
+                DSHelper.PrintPrettyJSON(envelopesList);
+            }
+            catch (ApiException e)
+            {
+                Console.WriteLine("DocuSign Exception!");
+
+                // Special handling for consent_required
+                String message = e.Message;
+                if (!String.IsNullOrWhiteSpace(message) && message.Contains("consent_required"))
+                {
+                    String consent_url = String.Format("{0}/oauth/auth?response_type=code&scope={1}&client_id={2}&redirect_uri={3}",
+                        DSConfig.AuthServer, DSConfig.PermissionScopes, DSConfig.ClientID, DSConfig.OAuthRedirectURI);
+
+                    Console.WriteLine("C O N S E N T   R E Q U I R E D");
+                    Console.WriteLine("Ask the user who will be impersonated to run the following url: ");
+                    Console.WriteLine(consent_url);
+                    Console.WriteLine("\nIt will ask the user to login and to approve access by your application.");
+                    Console.WriteLine("Alternatively, an Administrator can use Organization Administration to");
+                    Console.WriteLine("pre-approve one or more users.");
+                }
+                else
+                {
+                    Console.WriteLine("    Reason: {0}", e.ErrorCode);
+                    Console.WriteLine("    Error Reponse: {0}", e.ErrorContent);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
 
             Console.WriteLine("Done. Hit enter to exit...");
             Console.ReadKey();
