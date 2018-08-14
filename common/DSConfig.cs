@@ -14,6 +14,7 @@ namespace eg_01_csharp_jwt
         private const string CC_1_NAME = "DS_CC_1_NAME";
         private const string PRIVATE_KEY_FILE = "DS_PRIVATE_KEY_FILE";
         private const string PRIVATE_KEY = "DS_PRIVATE_KEY";
+        private const string DS_AUTH_SERVER = "DS_AUTH_SERVER";
 
         static DSConfig()
         {
@@ -27,6 +28,7 @@ namespace eg_01_csharp_jwt
             Cc1Name = GetSetting(CC_1_NAME);
             PrivateKeyFile = GetSetting(PRIVATE_KEY_FILE);
             PrivateKey = GetSetting(PRIVATE_KEY);
+            AuthServer = GetSetting(DS_AUTH_SERVER);
             AuthenticationURL = "https://account-d.docusign.com";
             AUD = "account-d.docusign.com";
             API = "restapi/v2";
@@ -55,10 +57,30 @@ namespace eg_01_csharp_jwt
         public static string Cc1Name { get; private set; }
         public static string PrivateKeyFile { get; private set; }
         public static string PrivateKey { get; private set; }
+        private static string authServer;
+        public static string AuthServer
+        {
+            get { return authServer; }
+            set
+            {
+                if (!String.IsNullOrWhiteSpace(value) && value.StartsWith("https://"))
+                {
+                    authServer = value.Substring(8);
+                }
+                else if (!String.IsNullOrWhiteSpace(value) && value.StartsWith("http://"))
+                {
+                    authServer = value.Substring(7);
+                }
+                else
+                {
+                    authServer = value;
+                }
+            }
+        }
         public static string AuthenticationURL { get; private set; }
         public static string AUD { get; private set; }
         public static string API { get; private set; }
-        public static string PermissionScopes { get; private set;}
+        public static string PermissionScopes { get; private set; }
         public static string JWTScope { get; private set; }
     }
 }
