@@ -74,7 +74,7 @@ namespace eg_01_csharp_jwt
         {
             EnvelopeDefinition envelopeDefinition = new EnvelopeDefinition
             {
-                EmailSubject = "Please sign this document sent from Node SDK"
+                EmailSubject = "Please sign this document sent from the C# SDK"
             };
 
             Document doc1 = CreateDocumentFromTemplate("1", "Order acknowledgement", "html",
