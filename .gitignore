@@ -1,4 +1,4 @@
-jwt-framework/.vs
-jwt-framework/bin
-jwt-framework/obj
-jwt-framework/packages
+.vs/
+**/bin/
+**/obj
+**/packages
