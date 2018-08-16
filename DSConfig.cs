@@ -12,7 +12,6 @@ namespace eg_01_csharp_jwt
         private const string SIGNER_1_NAME = "DS_SIGNER_1_NAME";
         private const string CC_1_EMAIL = "DS_CC_1_EMAIL";
         private const string CC_1_NAME = "DS_CC_1_NAME";
-        private const string PRIVATE_KEY_FILE = "DS_PRIVATE_KEY_FILE";
         private const string PRIVATE_KEY = "DS_PRIVATE_KEY";
         private const string DS_AUTH_SERVER = "DS_AUTH_SERVER";
 
@@ -26,7 +25,6 @@ namespace eg_01_csharp_jwt
             Signer1Name = GetSetting(SIGNER_1_NAME);
             Cc1Email = GetSetting(CC_1_EMAIL);
             Cc1Name = GetSetting(CC_1_NAME);
-            PrivateKeyFile = GetSetting(PRIVATE_KEY_FILE);
             PrivateKey = GetSetting(PRIVATE_KEY);
             AuthServer = GetSetting(DS_AUTH_SERVER);
             AuthenticationURL = GetSetting(DS_AUTH_SERVER);
@@ -40,7 +38,7 @@ namespace eg_01_csharp_jwt
             string val = Environment.GetEnvironmentVariable(configKey)
                 ?? ConfigurationManager.AppSettings.Get(configKey);
 
-            if ((PRIVATE_KEY_FILE.Equals(configKey) || PRIVATE_KEY.Equals(configKey)) && "FALSE".Equals(val))
+            if (PRIVATE_KEY.Equals(configKey) && "FALSE".Equals(val))
                 return null;
 
             return val ?? "";
