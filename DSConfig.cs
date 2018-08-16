@@ -29,8 +29,7 @@ namespace eg_01_csharp_jwt
             PrivateKeyFile = GetSetting(PRIVATE_KEY_FILE);
             PrivateKey = GetSetting(PRIVATE_KEY);
             AuthServer = GetSetting(DS_AUTH_SERVER);
-            AuthenticationURL = "https://account-d.docusign.com";
-            AUD = "account-d.docusign.com";
+            AuthenticationURL = GetSetting(DS_AUTH_SERVER);
             API = "restapi/v2";
             PermissionScopes = "signature impersonation";
             JWTScope = "signature";
@@ -78,7 +77,6 @@ namespace eg_01_csharp_jwt
             }
         }
         public static string AuthenticationURL { get; private set; }
-        public static string AUD { get; private set; }
         public static string API { get; private set; }
         public static string PermissionScopes { get; private set; }
         public static string JWTScope { get; private set; }

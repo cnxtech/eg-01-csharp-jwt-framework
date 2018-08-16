@@ -8,7 +8,9 @@ using System.Collections.Generic;
 namespace eg_01_csharp_jwt
 {
     /// <summary>
-    /// 
+    /// Send an envelope with a signer and cc recipient; with three docs:
+    /// an HTML, a Word, and a PDF doc.
+    /// Anchor text positioning is used for the fields.
     /// </summary>
     internal class SendEnvelope : ExampleBase
     {
@@ -45,14 +47,14 @@ namespace eg_01_csharp_jwt
         }
 
         /// <summary>
-        /// This class create and send envelope demostration
+        /// This class create and send envelope
         /// </summary>
         /// <param name="apiClient"></param>
         public SendEnvelope(ApiClient apiClient) : base(apiClient)
         {
         }
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         internal EnvelopeSummary Send()
@@ -61,13 +63,11 @@ namespace eg_01_csharp_jwt
 
             EnvelopeDefinition envelope = this.CreateEvelope();
             EnvelopesApi envelopeApi = new EnvelopesApi(ApiClient.Configuration);
-            
             EnvelopeSummary results = envelopeApi.CreateEnvelope(AccountID, envelope);
-
             return results;
         }
         /// <summary>
-        /// This method creates envelope from template
+        /// This method creates the envelope request body 
         /// </summary>
         /// <returns></returns>
         private EnvelopeDefinition CreateEvelope()
@@ -163,7 +163,7 @@ namespace eg_01_csharp_jwt
             };
         }
         /// <summary>
-        /// This method creates CarbonCopy instance and populate its members 
+        /// This method creates CarbonCopy instance and populate its members
         /// </summary>
         /// <returns>CarbonCopy instance</returns>
         private CarbonCopy CreateCarbonCopy()
