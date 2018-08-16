@@ -66,12 +66,20 @@ namespace eg_01_csharp_jwt
             OAuth.UserInfo userInfo = ApiClient.GetUserInfo(authToken.access_token);
             Account acct = null;
 
-            if (string.IsNullOrEmpty(DSConfig.TargetAccountID) || DSConfig.TargetAccountID.Equals("FALSE"))
-            {
-                var accounts = userInfo.GetAccounts();
+            var accounts = userInfo.GetAccounts();
 
-                acct = accounts.FirstOrDefault(a => a.GetIsDefault() == "true") ??
-                       accounts.FirstOrDefault(a => a.AccountId() == DSConfig.TargetAccountID);
+            if (!string.IsNullOrEmpty(DSConfig.TargetAccountID) && !DSConfig.TargetAccountID.Equals("FALSE"))
+            {
+                acct = accounts.FirstOrDefault(a => a.AccountId() == DSConfig.TargetAccountID);
+
+                if (acct == null)
+                {
+                    throw new Exception("The user does not have access to account " + DSConfig.TargetAccountID);
+                }
+            }
+            else
+            {
+                acct = accounts.FirstOrDefault(a => a.GetIsDefault() == "true");
             }
 
             return acct;
