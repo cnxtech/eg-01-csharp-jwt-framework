@@ -7,7 +7,7 @@ using static DocuSign.eSign.Api.EnvelopesApi;
 namespace eg_01_csharp_jwt
 {
     /// <summary>
-    /// This class shows get status changes for one or more envelope(s).
+    /// This class calls the  List status changes API method.
     /// </summary>
     internal class ListEnvelopes: ExampleBase
     {

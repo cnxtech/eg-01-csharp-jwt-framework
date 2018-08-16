@@ -13,17 +13,17 @@ namespace eg_01_csharp_jwt
             {
                 var apiClient = new ApiClient();
 
+                Console.WriteLine("\nSending an envelope with three documents. This takes about 15 seconds...");
                 EnvelopeSummary result = new SendEnvelope(apiClient).Send();
-                Console.WriteLine("Envelope status: {0}. Envelope ID: {1}", result.Status, result.EnvelopeId);
+                Console.WriteLine("\nDone. Envelope status: {0}. Envelope ID: {1}", result.Status, result.EnvelopeId);
 
-                Console.WriteLine("\nList envelopes in the account...");
+                Console.WriteLine("\n\nList the envelopes in the account...");
                 EnvelopesInformation envelopesList = new ListEnvelopes(apiClient).List();
-
                 List<Envelope> envelopes = envelopesList.Envelopes;
 
                 if (envelopesList != null && envelopes.Count > 2)
                 {
-                    //Console.WriteLine("Results for {0} envelopes were returned. Showing the first two: ", envelopes.Count);
+                    Console.WriteLine("Results for {0} envelopes were returned. Showing the first two: ", envelopes.Count);
                     envelopesList.Envelopes = new List<Envelope>() {
                         envelopes[0],
                         envelopes[1]
@@ -34,14 +34,14 @@ namespace eg_01_csharp_jwt
             }
             catch (ApiException e)
             {
-                Console.WriteLine("DocuSign Exception!");
+                Console.WriteLine("\nDocuSign Exception!");
 
                 // Special handling for consent_required
                 String message = e.Message;
                 if (!String.IsNullOrWhiteSpace(message) && message.Contains("consent_required"))
                 {
-                    String consent_url = String.Format("{0}/oauth/auth?response_type=code&scope={1}&client_id={2}&redirect_uri={3}",
-                        DSConfig.AuthServer, DSConfig.PermissionScopes, DSConfig.ClientID, DSConfig.OAuthRedirectURI);
+                    String consent_url = String.Format("\n    {0}/oauth/auth?response_type=code&scope={1}&client_id={2}&redirect_uri={3}",
+                        DSConfig.AuthenticationURL, DSConfig.PermissionScopes, DSConfig.ClientID, DSConfig.OAuthRedirectURI);
 
                     Console.WriteLine("C O N S E N T   R E Q U I R E D");
                     Console.WriteLine("Ask the user who will be impersonated to run the following url: ");
