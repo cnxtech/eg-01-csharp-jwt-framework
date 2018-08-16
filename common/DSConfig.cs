@@ -52,7 +52,6 @@ namespace eg_01_csharp_jwt
         public static string Signer1Name { get; private set; }
         public static string Cc1Email { get; private set; }
         public static string Cc1Name { get; private set; }
-        public static string PrivateKeyFile { get; private set; }
         public static string PrivateKey { get; private set; }
         private static string authServer;
         public static string AuthServer
