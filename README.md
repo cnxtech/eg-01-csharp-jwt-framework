@@ -1,4 +1,4 @@
-# Example 1: C# .NET Core Service Integration
+# Example 1: C# .NET Framework Service Integration
 
 Repository: [eg-01-csharp-jwt-framework](https://github.com/docusign/eg-01-csharp-jwt-framework)
 
@@ -87,7 +87,6 @@ also work (unchanged) with .NET Core.
 
 A [.NET Core version](https://github.com/docusign/eg-01-csharp-jwt-core)
 of this example is also available. 
-
 It uses the same common set of source files,
 but is configured as a .NET Core solution for
 Visual Studio 2017.
@@ -97,7 +96,7 @@ Visual Studio 2017.
 Submit support questions to [StackOverflow](https://stackoverflow.com). Use tag `docusignapi`.
 
 Contributions via Pull Requests are appreciated. Pull requests for the common
-files should be contrbuted to the 
+files must be contributed to the 
 [eg-01-csharp-jwt-common](https://github.com/docusign/eg-01-csharp-jwt-common)
 repository.
 See the [Contributing.md](https://github.com/docusign/eg-01-csharp-jwt-common/blob/master/docs/Contributing.md/)
