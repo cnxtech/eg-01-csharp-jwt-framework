@@ -5,7 +5,6 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using static DocuSign.eSign.Client.Auth.OAuth.UserInfo;
 
 namespace eg_01_csharp_jwt
@@ -23,7 +22,7 @@ namespace eg_01_csharp_jwt
 
         protected static string AccountID
         {
-            get { return Account.AccountId; }
+            get { return Account.AccountId(); }
         }
 
         public ExampleBase(ApiClient client)
@@ -45,17 +44,18 @@ namespace eg_01_csharp_jwt
         {
             ApiClient.SetBasePath(null);
 
-            OAuth.OAuthToken authToken = ApiClient.RequestJWTUserToken(DSConfig.ClientID,
+            OAuth.OAuthToken authToken = ApiClient.ConfigureJwtAuthorizationFlowByKey(DSConfig.ClientID,
                             DSConfig.ImpersonatedUserGuid,
                             DSConfig.AuthServer,
-                            Encoding.Unicode.GetBytes(DSConfig.PrivateKey), 1);
+                            DSConfig.PrivateKey,
+                            1);
 
             AccessToken = authToken.access_token;
 
             if (Account == null)
                 Account = GetAccountInfo(authToken);
 
-            ApiClient = new ApiClient(Account.BaseUri + "/restapi");
+            ApiClient = new ApiClient(Account.GetBaseUri() + "/restapi");
 
             //notice that expiresIn value is not exposed yet by the SDK so we will assume it is 1 hour.
             expiresIn = DateTime.Now.Millisecond + (TOKEN_EXPIRATION_IN_SECONDS * 1000);
@@ -66,11 +66,11 @@ namespace eg_01_csharp_jwt
             OAuth.UserInfo userInfo = ApiClient.GetUserInfo(authToken.access_token);
             Account acct = null;
 
-            var accounts = userInfo.Accounts;
+            var accounts = userInfo.GetAccounts();
 
             if (!string.IsNullOrEmpty(DSConfig.TargetAccountID) && !DSConfig.TargetAccountID.Equals("FALSE"))
             {
-                acct = accounts.FirstOrDefault(a => a.AccountId == DSConfig.TargetAccountID);
+                acct = accounts.FirstOrDefault(a => a.AccountId() == DSConfig.TargetAccountID);
 
                 if (acct == null)
                 {
@@ -79,7 +79,7 @@ namespace eg_01_csharp_jwt
             }
             else
             {
-                acct = accounts.FirstOrDefault(a => a.IsDefault == "true");
+                acct = accounts.FirstOrDefault(a => a.GetIsDefault() == "true");
             }
 
             return acct;
