@@ -8,8 +8,7 @@ using static DocuSign.eSign.Client.Auth.OAuth.UserInfo;
 namespace eg_01_csharp_jwt
 {
     public class ExampleBase
-    {
-        private const int TOKEN_EXPIRATION_IN_SECONDS = 3600;
+    {        
         private const int TOKEN_REPLACEMENT_IN_SECONDS = 10 * 60;
 
         private static string AccessToken { get; set; }
@@ -52,8 +51,7 @@ namespace eg_01_csharp_jwt
                 Account = GetAccountInfo(authToken);
 
             ApiClient = new ApiClient(Account.BaseUri + "/restapi");
-
-            //notice that expiresIn value is not exposed yet by the SDK so we will assume it is 1 hour.
+            
             expiresIn = DateTime.Now.Second + authToken.expires_in.Value;
         }
 
