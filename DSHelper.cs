@@ -31,23 +31,7 @@ namespace eg_01_csharp_jwt
             }
 
             return buff;
-        }
-        /// <summary>
-        /// This method check if directory exists and if not it create it.
-        /// </summary>
-        /// <param name="dirName">directory path</param>
-        /// <returns>returns absolute path</returns>
-        internal static string EnsureDirExistance(string dirName)
-        {
-            DirectoryInfo dirInfo = new DirectoryInfo(dirName);
-
-            if (!Directory.Exists(dirName))
-            {
-                dirInfo = Directory.CreateDirectory(dirName);
-            }
-
-            return dirInfo.FullName;
-        }
+        }        
         /// <summary>
         /// This method printing pretty json format
         /// </summary>
@@ -58,20 +42,6 @@ namespace eg_01_csharp_jwt
             string json = JsonConvert.SerializeObject(obj);
             string jsonFormatted = JValue.Parse(json).ToString(Formatting.Indented);
             Console.WriteLine(jsonFormatted);
-        }
-        /// <summary>
-        /// This method to write byte array to file
-        /// </summary>
-        /// <param name="filePath">path to file</param>
-        /// <param name="stream"> memory stream to write</param>
-        internal static void WriteStreamToFile(string filePath, Stream stream)
-        {
-            using (FileStream fs = File.Create(filePath, (int)stream.Length))
-            {
-                byte[] bytesInStream = new byte[stream.Length];
-                stream.Read(bytesInStream, 0, bytesInStream.Length);
-                fs.Write(bytesInStream, 0, bytesInStream.Length);
-            }
         }
     }
 }
