@@ -1,18 +1,15 @@
 ﻿using DocuSign.eSign.Client;
 using DocuSign.eSign.Client.Auth;
-using DocuSign.eSign.Model;
 using System;
-using System.IO;
 using System.Linq;
-using System.Reflection;
+using System.Text;
 using static DocuSign.eSign.Client.Auth.OAuth.UserInfo;
 
 namespace eg_01_csharp_jwt
 {
     public class ExampleBase
-    {
-        private const int TOKEN_EXPIRATION_IN_SECONDS = 3600;
-        private const int TOKEN_REPLACEMENT_IN_MILLISECONDS = 10 * 60 * 1000;
+    {        
+        private const int TOKEN_REPLACEMENT_IN_SECONDS = 10 * 60;
 
         private static string AccessToken { get; set; }
         private static int expiresIn;
@@ -22,7 +19,7 @@ namespace eg_01_csharp_jwt
 
         protected static string AccountID
         {
-            get { return Account.AccountId(); }
+            get { return Account.AccountId; }
         }
 
         public ExampleBase(ApiClient client)
@@ -33,7 +30,7 @@ namespace eg_01_csharp_jwt
         public void CheckToken()
         {
             if (AccessToken == null
-                || (DateTime.Now.Millisecond + TOKEN_REPLACEMENT_IN_MILLISECONDS) > expiresIn)
+                || (DateTime.Now.Millisecond + TOKEN_REPLACEMENT_IN_SECONDS) > expiresIn)
             {
                 Console.WriteLine("Obtaining a new access token...");
                 UpdateToken();
@@ -42,12 +39,10 @@ namespace eg_01_csharp_jwt
 
         private void UpdateToken()
         {
-            ApiClient.SetBasePath(null);
-
-            OAuth.OAuthToken authToken = ApiClient.ConfigureJwtAuthorizationFlowByKey(DSConfig.ClientID,
+            OAuth.OAuthToken authToken = ApiClient.RequestJWTUserToken(DSConfig.ClientID,
                             DSConfig.ImpersonatedUserGuid,
                             DSConfig.AuthServer,
-                            DSConfig.PrivateKey,
+                            Encoding.UTF8.GetBytes(DSConfig.PrivateKey),
                             1);
 
             AccessToken = authToken.access_token;
@@ -55,22 +50,22 @@ namespace eg_01_csharp_jwt
             if (Account == null)
                 Account = GetAccountInfo(authToken);
 
-            ApiClient = new ApiClient(Account.GetBaseUri() + "/restapi");
-
-            //notice that expiresIn value is not exposed yet by the SDK so we will assume it is 1 hour.
-            expiresIn = DateTime.Now.Millisecond + (TOKEN_EXPIRATION_IN_SECONDS * 1000);
+            ApiClient = new ApiClient(Account.BaseUri + "/restapi");
+            
+            expiresIn = DateTime.Now.Second + authToken.expires_in.Value;
         }
 
         private Account GetAccountInfo(OAuth.OAuthToken authToken)
         {
+            ApiClient.SetOAuthBasePath(DSConfig.AuthServer);
             OAuth.UserInfo userInfo = ApiClient.GetUserInfo(authToken.access_token);
             Account acct = null;
 
-            var accounts = userInfo.GetAccounts();
+            var accounts = userInfo.Accounts;
 
             if (!string.IsNullOrEmpty(DSConfig.TargetAccountID) && !DSConfig.TargetAccountID.Equals("FALSE"))
             {
-                acct = accounts.FirstOrDefault(a => a.AccountId() == DSConfig.TargetAccountID);
+                acct = accounts.FirstOrDefault(a => a.AccountId == DSConfig.TargetAccountID);
 
                 if (acct == null)
                 {
@@ -79,7 +74,7 @@ namespace eg_01_csharp_jwt
             }
             else
             {
-                acct = accounts.FirstOrDefault(a => a.GetIsDefault() == "true");
+                acct = accounts.FirstOrDefault(a => a.IsDefault == "true");
             }
 
             return acct;
